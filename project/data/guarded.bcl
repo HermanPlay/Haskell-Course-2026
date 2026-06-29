@@ -1,0 +1,32 @@
+contract Guarded {
+  state {
+    balances: map<address, int> = empty;
+    supply:   int               = 0;
+    owner:    address            = sender;
+    paused:   bool              = false;
+  }
+
+  transaction mint(to: address, amount: int) {
+    if (sender == owner) {
+      balances[to] := balances[to] + amount;
+      supply       := supply + amount;
+    } else {
+      require false;
+    }
+  }
+
+  transaction transfer(to: address, amount: int) {
+    require !paused;
+    require balances[sender] >= amount;
+    balances[sender] := balances[sender] - amount;
+    balances[to]     := balances[to] + amount;
+  }
+
+  transaction setPaused(newState: bool) {
+    if (sender == owner) {
+      paused := newState;
+    } else {
+      require false;
+    }
+  }
+}

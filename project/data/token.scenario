@@ -1,0 +1,27 @@
+# Scenario: mint, then a chain of transfers, then a double-spend attempt.
+# Syntax (one command per line):
+#   block <parent-id>          -- start a new block; parent-id is an int
+#   tx <name> <sender> k=v ... -- submit a tx in the current block
+#                                 v is parsed as int, bool (true/false), or address (bare ident)
+#   end                        -- close the block and submit it to the chain
+
+block 0
+tx mint deployer to=alice amount=1000
+end
+
+block 1
+tx transfer alice to=bob amount=300
+tx transfer alice to=carol amount=500
+tx transfer bob to=carol amount=50
+end
+
+block 2
+tx transfer alice to=bob amount=200
+tx transfer alice to=carol amount=200
+end
+
+block 3
+tx transfer bob to=eve amount=9999
+tx transfer bob to=eve amount=100
+tx transfer carol to=eve amount=30
+end

@@ -6,7 +6,7 @@ cabal-version: 2.2
 
 name:           project
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/githubuser/project#readme>
+description:    BlockChainLang: a small DSL for smart contracts.
 homepage:       https://github.com/githubuser/project#readme
 bug-reports:    https://github.com/githubuser/project/issues
 author:         Author name here
@@ -25,6 +25,13 @@ source-repository head
 
 library
   exposed-modules:
+      BlockChain.Error
+      BlockChain.Ledger
+      BlockChain.Parser
+      BlockChain.Syntax
+      BlockChain.Type
+      BlockChain.Value
+      BlockChain.VM
       Lib
   other-modules:
       Paths_project
@@ -32,9 +39,17 @@ library
       Paths_project
   hs-source-dirs:
       src
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
+  default-extensions:
+      LambdaCase
+      BangPatterns
+      ScopedTypeVariables
+      DerivingStrategies
+      ImportQualifiedPost
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -fwrite-ide-info -hiedir=.hie
   build-depends:
       base >=4.7 && <5
+    , containers
+    , text
   default-language: Haskell2010
 
 executable project-exe
@@ -45,23 +60,45 @@ executable project-exe
       Paths_project
   hs-source-dirs:
       app
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  default-extensions:
+      LambdaCase
+      BangPatterns
+      ScopedTypeVariables
+      DerivingStrategies
+      ImportQualifiedPost
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -fwrite-ide-info -hiedir=.hie
   build-depends:
       base >=4.7 && <5
+    , containers
     , project
+    , text
   default-language: Haskell2010
 
 test-suite project-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      LedgerSpec
+      ParserSpec
+      PropertySpec
+      VMSpec
       Paths_project
   autogen-modules:
       Paths_project
   hs-source-dirs:
       test
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  default-extensions:
+      LambdaCase
+      BangPatterns
+      ScopedTypeVariables
+      DerivingStrategies
+      ImportQualifiedPost
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -fwrite-ide-info -hiedir=.hie
   build-depends:
-      base >=4.7 && <5
+      QuickCheck
+    , base >=4.7 && <5
+    , containers
+    , hspec
     , project
+    , text
   default-language: Haskell2010

@@ -1,0 +1,37 @@
+# Scenario: exercise the 'if' branches in the Guarded contract.
+#   mint:    only "owner" can mint (if sender == "owner" {...} else {require false;})
+#   setPaused: only "owner" can pause / unpause
+#   transfer: refuses while paused (require !paused)
+
+block 0
+# owner mints 1000 to alice — if-branch fires, state mutated
+tx mint owner to=alice amount=1000
+end
+
+block 1
+# non-owner tries to mint — else-branch fires, require false, reverts
+tx mint bob to=bob amount=500
+# owner mines more — ok
+tx mint owner to=bob amount=200
+end
+
+block 2
+# alice transfers 100 to bob — not paused, ok
+tx transfer alice to=bob amount=100
+# bob tries to pause (not owner) — reverts
+tx setPaused bob newState=true
+# owner pauses
+tx setPaused owner newState=true
+end
+
+block 3
+# now paused: alice tries to transfer — require !paused fails, reverts
+tx transfer alice to=bob amount=50
+# owner unpauses
+tx setPaused owner newState=false
+end
+
+block 4
+# unpaused: alice transfers 50 to bob — ok
+tx transfer alice to=bob amount=50
+end

@@ -1,0 +1,17 @@
+contract Token {
+  state {
+    balances: map<address, int> = empty;
+    supply:   int               = 0;
+  }
+
+  transaction mint(to: address, amount: int) {
+    balances[to] := balances[to] + amount;
+    supply       := supply + amount;
+  }
+
+  transaction transfer(to: address, amount: int) {
+    require balances[sender] >= amount;
+    balances[sender] := balances[sender] - amount;
+    balances[to]     := balances[to] + amount;
+  }
+}
